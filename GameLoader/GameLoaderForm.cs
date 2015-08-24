@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,15 +21,29 @@ namespace GameLoader
         public GameLoaderForm()
         {
             InitializeComponent();
-            // TODO Load from data 
-            Games = new BindingList<Game>();
+            this.Closing += OnClosing;
+            Games = new BindingList<Game>(LoadData());
             var source = new BindingSource(Games, null);
             folderGridView.DataSource = source;
         }
 
-        private void LoadData()
+        private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            
+            SaveData();
+        }
+
+        private void SaveData()
+        {
+            List<Game> ga = Games.ToList();
+            var ldm = new LocalDataManager();
+            ldm.SaveGames(ga);
+        }
+
+        private List<Game> LoadData()
+        {
+            LocalDataManager ldm = new LocalDataManager();
+            return ldm.LoadGames();
+
         }
 
         private void addNewGameButton_Click(object sender, EventArgs e)
@@ -64,7 +79,7 @@ namespace GameLoader
             {
                 Game game = new Game(path, name, size, fileCount);
                 Games.Add(game);
-                
+                SaveData();
             }
         }
 
@@ -74,8 +89,15 @@ namespace GameLoader
             Game game = currentrow?.DataBoundItem as Game;
             if (game != null)
             {
-                    
+                Debug.WriteLine(game.Name);
+                nameEditTextBox.Text = game.Name;
+                pathEditTextBox.Text = game.Path;
             }
+        }
+
+        private void saveChangesButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

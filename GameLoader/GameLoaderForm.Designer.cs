@@ -30,14 +30,23 @@
         {
             System.Windows.Forms.Label label1;
             System.Windows.Forms.Label label2;
+            System.Windows.Forms.Label label3;
+            System.Windows.Forms.Label label4;
             this.folderGridView = new System.Windows.Forms.DataGridView();
             this.newGamePathTextBox = new System.Windows.Forms.TextBox();
             this.addNewGameButton = new System.Windows.Forms.Button();
             this.newGameName = new System.Windows.Forms.TextBox();
             this.gameDataGroupbox = new System.Windows.Forms.GroupBox();
+            this.activateGameButton = new System.Windows.Forms.Button();
+            this.saveChangesButton = new System.Windows.Forms.Button();
+            this.pathEditTextBox = new System.Windows.Forms.TextBox();
+            this.nameEditTextBox = new System.Windows.Forms.TextBox();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.folderGridView)).BeginInit();
+            this.gameDataGroupbox.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -59,6 +68,24 @@
             label2.Size = new System.Drawing.Size(60, 13);
             label2.TabIndex = 5;
             label2.Text = "Game Path";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(6, 20);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(35, 13);
+            label3.TabIndex = 2;
+            label3.Text = "Name";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(6, 59);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(29, 13);
+            label4.TabIndex = 2;
+            label4.Text = "Path";
             // 
             // folderGridView
             // 
@@ -108,12 +135,51 @@
             // 
             this.gameDataGroupbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gameDataGroupbox.Controls.Add(this.activateGameButton);
+            this.gameDataGroupbox.Controls.Add(this.saveChangesButton);
+            this.gameDataGroupbox.Controls.Add(label4);
+            this.gameDataGroupbox.Controls.Add(label3);
+            this.gameDataGroupbox.Controls.Add(this.pathEditTextBox);
+            this.gameDataGroupbox.Controls.Add(this.nameEditTextBox);
             this.gameDataGroupbox.Location = new System.Drawing.Point(563, 13);
             this.gameDataGroupbox.Name = "gameDataGroupbox";
             this.gameDataGroupbox.Size = new System.Drawing.Size(146, 285);
             this.gameDataGroupbox.TabIndex = 6;
             this.gameDataGroupbox.TabStop = false;
             this.gameDataGroupbox.Text = "Game Data";
+            // 
+            // activateGameButton
+            // 
+            this.activateGameButton.Location = new System.Drawing.Point(9, 256);
+            this.activateGameButton.Name = "activateGameButton";
+            this.activateGameButton.Size = new System.Drawing.Size(131, 23);
+            this.activateGameButton.TabIndex = 4;
+            this.activateGameButton.Text = "Activate";
+            this.activateGameButton.UseVisualStyleBackColor = true;
+            // 
+            // saveChangesButton
+            // 
+            this.saveChangesButton.Location = new System.Drawing.Point(9, 102);
+            this.saveChangesButton.Name = "saveChangesButton";
+            this.saveChangesButton.Size = new System.Drawing.Size(131, 23);
+            this.saveChangesButton.TabIndex = 3;
+            this.saveChangesButton.Text = "Save Changes";
+            this.saveChangesButton.UseVisualStyleBackColor = true;
+            this.saveChangesButton.Click += new System.EventHandler(this.saveChangesButton_Click);
+            // 
+            // pathEditTextBox
+            // 
+            this.pathEditTextBox.Location = new System.Drawing.Point(9, 75);
+            this.pathEditTextBox.Name = "pathEditTextBox";
+            this.pathEditTextBox.Size = new System.Drawing.Size(131, 20);
+            this.pathEditTextBox.TabIndex = 1;
+            // 
+            // nameEditTextBox
+            // 
+            this.nameEditTextBox.Location = new System.Drawing.Point(9, 36);
+            this.nameEditTextBox.Name = "nameEditTextBox";
+            this.nameEditTextBox.Size = new System.Drawing.Size(131, 20);
+            this.nameEditTextBox.TabIndex = 0;
             // 
             // GameLoaderForm
             // 
@@ -131,6 +197,8 @@
             this.Name = "GameLoaderForm";
             this.Text = "Game Loader";
             ((System.ComponentModel.ISupportInitialize)(this.folderGridView)).EndInit();
+            this.gameDataGroupbox.ResumeLayout(false);
+            this.gameDataGroupbox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,6 +211,10 @@
         private System.Windows.Forms.Button addNewGameButton;
         private System.Windows.Forms.TextBox newGameName;
         private System.Windows.Forms.GroupBox gameDataGroupbox;
+        private System.Windows.Forms.Button saveChangesButton;
+        private System.Windows.Forms.TextBox pathEditTextBox;
+        private System.Windows.Forms.TextBox nameEditTextBox;
+        private System.Windows.Forms.Button activateGameButton;
     }
 }
 
