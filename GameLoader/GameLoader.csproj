@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="GameStatus.cs" />
     <Compile Include="IO\GameAdder.cs" />
+    <Compile Include="IO\GameController.cs" />
     <Compile Include="IO\IOChecker.cs" />
     <Compile Include="IO\LocalDataManager.cs" />
     <Compile Include="Program.cs" />
