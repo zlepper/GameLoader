@@ -14,6 +14,7 @@ namespace GameLoader.IO
     {
         private DirectoryInfo directory;
         private string name;
+        private string[] paths;
 
         public event DataReadyEventHandler DataReady;
 
@@ -52,6 +53,27 @@ namespace GameLoader.IO
 
             // Emit an event we can listen for
             OnDataReady(directory.FullName, totalFilesSize, count, name);
+        }
+
+        public void AddGames(string[] gamePaths)
+        {
+            paths = gamePaths;
+            using (BackgroundWorker bw = new BackgroundWorker())
+            {
+                bw.DoWork += AddABunchOfGames;
+                bw.RunWorkerAsync();
+            }
+            
+        }
+
+        private void AddABunchOfGames(object sender, DoWorkEventArgs args)
+        {
+            foreach (string path in paths)
+            {
+                directory = new DirectoryInfo(path);
+                name = directory.Name;
+                GetFileData(sender, args);
+            }
         }
     }
 }

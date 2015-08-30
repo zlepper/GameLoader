@@ -15,7 +15,9 @@ namespace GameLoader
 {
     public partial class GameLoaderForm : Form
     {
-        // We can't use a normal list, otherwise the datagridview will not update
+        /// <summary>
+        /// We can't use a normal list, otherwise the datagridview will not update
+        /// </summary>
         public BindingList<Game> Games;
 
         /// <summary>
@@ -29,6 +31,15 @@ namespace GameLoader
         {
             InitializeComponent();
             Closing += OnClosing;
+            folderGridView.UserDeletingRow += delegate(object sender, DataGridViewRowCancelEventArgs args)
+            {
+                Game game = args.Row.DataBoundItem as Game;
+                if (game != null && game.Status != GameStatus.Deactivated)
+                {
+                    MessageBox.Show("You need to deactivate the game before you can delete it from GameLoader");
+                    args.Cancel = true;
+                }
+            };
             Games = new BindingList<Game>(LoadData());
             var source = new BindingSource(Games, null);
             folderGridView.DataSource = source;
@@ -40,7 +51,59 @@ namespace GameLoader
             var ldm = new LocalDataManager();
             Config cfg = ldm.LoadConfig();
             fastFolderTextBox.Text = cfg.OutputPath;
+            if (cfg.FirstRun)
+            {
+                cfg.FirstRun = false;
+                ldm.SaveConfig(cfg);
+                DialogResult result =
+                    MessageBox.Show(
+                        "This is the first time you are running GameLoader, do you want it to check for installed games?",
+                        "Check for games", MessageBoxButtons.YesNo);
+                var fs = cfg.GamesFolders;
+                if (result == DialogResult.Yes)
+                {
+                    string[] paths = GameSuggestions.GetGameFolders();
+                    string question = "I found these paths: " + Environment.NewLine + string.Join(Environment.NewLine, paths) + Environment.NewLine + "Do you want to use them?" + Environment.NewLine  + "You can add other folders to auto-discovery later if you want. ";
+                    result = MessageBox.Show(question, "Found paths", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        fs.AddRange(paths);
+                    }
+                }
+                ldm.SaveConfig(cfg);
+                using (BackgroundWorker bw = new BackgroundWorker())
+                {
+                    bw.DoWork += delegate
+                    {
+                        foreach (string folder in fs)
+                        {
+                            string[] paths = GameSuggestions.GetGameFolders(folder);
+                            GameAdder ga = new GameAdder();
+                            ga.DataReady += AdderOnDataReady;
+                            ga.AddGames(paths);
+                        }
+                    };
+                    bw.RunWorkerAsync();
+                }
+                
+            }
+        }
 
+        private void AdderOnDataReady(string path, long size, int count, string name)
+        {
+            if (folderGridView.InvokeRequired)
+            {
+                folderGridView.BeginInvoke(new Action(() => AdderOnDataReady(path, size, count, name)));
+            }
+            else
+            {
+                Game game = new Game(path, name, size, count);
+                // Don't add a game already in the list
+                if (Games.Any(g => g.Path.Equals(game.Path))) return;
+                Games.Add(game);
+                SaveData();
+                folderGridView.Refresh();
+            }
         }
 
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -88,22 +151,8 @@ namespace GameLoader
             if (result == null) return;
             
             GameAdder adder = new GameAdder();
-            adder.DataReady += (path1, size, fileCount, name1) => AdderOnDataReady(path1, name1, size, fileCount);
+            adder.DataReady += AdderOnDataReady;
             adder.AddGame(result, name);
-        }
-
-        private void AdderOnDataReady(string path, string name, long size, int fileCount)
-        {
-            if (folderGridView.InvokeRequired)
-            {
-                folderGridView.BeginInvoke(new Action(() => AdderOnDataReady(path, name, size, fileCount)));
-            }
-            else
-            {
-                Game game = new Game(path, name, size, fileCount);
-                Games.Add(game);
-                SaveData();
-            }
         }
 
         private void folderGridView_CurrentCellChanged(object sender, EventArgs e)
@@ -307,6 +356,23 @@ namespace GameLoader
             var f = new DirectoryInfo(t);
             if (!f.Exists) return;
             newGameName.Text = f.Name;
+        }
+
+        private void AddAutodiscoveryFolderButton_Click(object sender, EventArgs e)
+        {
+            string t = AddAutoDiscoveryTextBox.Text;
+            if (string.IsNullOrWhiteSpace(t)) return;
+            if (!Directory.Exists(t))
+            {
+                MessageBox.Show("Directory does not exist");
+                return;
+            }
+            var ldm = new LocalDataManager();
+            var cfg = ldm.LoadConfig();
+            cfg.GamesFolders.Add(t);
+            GameAdder ga = new GameAdder();
+            ga.DataReady += AdderOnDataReady;
+            ga.AddGames(GameSuggestions.GetGameFolders(t));
         }
     }
 }

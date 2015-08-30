@@ -26,7 +26,7 @@
     <InstallUrl>http://zlepper.dk/GameLoader/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -89,6 +89,7 @@
       <DependentUpon>GameLoaderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GameStatus.cs" />
+    <Compile Include="GameSuggestions.cs" />
     <Compile Include="IO\GameAdder.cs" />
     <Compile Include="IO\GameController.cs" />
     <Compile Include="IO\IOChecker.cs" />

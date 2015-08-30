@@ -47,7 +47,7 @@ namespace GameLoader.IO
             catch (DirectoryNotFoundException)
             {
             }
-            string json = JsonConvert.SerializeObject(config);
+            string json = JsonConvert.SerializeObject(config, Formatting.Indented);
             File.WriteAllText(configPath, json);
         }
 
@@ -59,9 +59,27 @@ namespace GameLoader.IO
         }
 
     }
+
+    /// <summary>
+    /// A strongly typed class of all the configs the app has
+    /// </summary>
     public class Config
     {
+        /// <summary>
+        /// The output path where GameLoader stores all games that are activated
+        /// </summary>
         public string OutputPath =
             Path.Combine(Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)), "GameLoader");
+
+        /// <summary>
+        /// Indicates if this is the first time we are running
+        /// Will be used to do some initial setup like games discovery
+        /// </summary>
+        public bool FirstRun = true;
+
+        /// <summary>
+        /// A list of folders where games are installed, such as the SteamApp directory
+        /// </summary>
+        public List<string> GamesFolders = new List<string>(); 
     }
 }
