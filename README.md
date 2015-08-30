@@ -6,6 +6,8 @@ An application to quickly load and unload games to and from a faster drive
 * Load and unload games with a single button press
 * Games work with launchers like Steam and Origin even when loaded
 * Games only take up space once, even when loaded
+* Auto discovery of Steam, Origin, Uplay and GOG games
+* Watch directories for new games
 * GameLoader autoupdates itself on startup
 
 # How to install
@@ -13,4 +15,4 @@ An application to quickly load and unload games to and from a faster drive
 2. Click accept on all the install prompts
 
 # Screenshot
-![GameLoader](http://i.imgur.com/DCO0ndc.png "GameLoader")
+![GameLoader](http://i.imgur.com/Ar0xGdw.png "GameLoader")
