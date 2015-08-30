@@ -11,3 +11,6 @@ An application to quickly load and unload games to and from a faster drive
 # How to install
 1. Click install here: http://zlepper.dk/GameLoader/publish.htm
 2. Click accept on all the install prompts
+
+# Screenshot
+![GameLoader](http://i.imgur.com/DCO0ndc.png "GameLoader")
