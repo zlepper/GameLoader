@@ -45,9 +45,12 @@ namespace GameLoader
 
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            SaveData();
             // We really shouldn't stop the process in the middle of moving files
-            if (workingProgress == WorkingProgress.BusyDoingNothing) return;
+            if (workingProgress == WorkingProgress.BusyDoingNothing)
+            {
+                SaveData();
+                return;
+            }
             MessageBox.Show("Currently moving a game, please wait for it to finish.");
             cancelEventArgs.Cancel = true;
         }
@@ -206,6 +209,10 @@ namespace GameLoader
 
         private void GameControllerOnStartMovingFiles()
         {
+            if (folderGridView.InvokeRequired)
+            {
+                folderGridView.Invoke(new Action(() => folderGridView.Refresh()));
+            }
             workingProgress = WorkingProgress.Moving;
         }
 
@@ -297,7 +304,7 @@ namespace GameLoader
             string t = newGamePathTextBox.Text;
             if (string.IsNullOrWhiteSpace(t)) return;
             if (!string.IsNullOrWhiteSpace(newGameName.Text)) return;
-            FileInfo f = new FileInfo(t);
+            var f = new DirectoryInfo(t);
             if (!f.Exists) return;
             newGameName.Text = f.Name;
         }
