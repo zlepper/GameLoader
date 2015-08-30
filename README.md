@@ -16,3 +16,6 @@ An application to quickly load and unload games to and from a faster drive
 
 # Screenshot
 ![GameLoader](http://i.imgur.com/Ar0xGdw.png "GameLoader")
+
+# Disclaimer
+Usage of GameLoader is completely without warranty, it might set your computer on fire or delete a game, this is by no means my fault. 
