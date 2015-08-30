@@ -94,6 +94,16 @@
             label4.TabIndex = 2;
             label4.Text = "Path";
             // 
+            // fastFolderLabel
+            // 
+            fastFolderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            fastFolderLabel.AutoSize = true;
+            fastFolderLabel.Location = new System.Drawing.Point(13, 458);
+            fastFolderLabel.Name = "fastFolderLabel";
+            fastFolderLabel.Size = new System.Drawing.Size(59, 13);
+            fastFolderLabel.TabIndex = 8;
+            fastFolderLabel.Text = "Fast Folder";
+            // 
             // folderGridView
             // 
             this.folderGridView.AllowUserToAddRows = false;
@@ -119,6 +129,7 @@
             this.newGamePathTextBox.Name = "newGamePathTextBox";
             this.newGamePathTextBox.Size = new System.Drawing.Size(479, 20);
             this.newGamePathTextBox.TabIndex = 1;
+            this.newGamePathTextBox.TextChanged += new System.EventHandler(this.newGamePathTextBox_TextChanged);
             // 
             // addNewGameButton
             // 
@@ -207,16 +218,6 @@
             this.statusToolStripLabel.Name = "statusToolStripLabel";
             this.statusToolStripLabel.Size = new System.Drawing.Size(42, 17);
             this.statusToolStripLabel.Text = "Ready!";
-            // 
-            // fastFolderLabel
-            // 
-            fastFolderLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            fastFolderLabel.AutoSize = true;
-            fastFolderLabel.Location = new System.Drawing.Point(13, 458);
-            fastFolderLabel.Name = "fastFolderLabel";
-            fastFolderLabel.Size = new System.Drawing.Size(59, 13);
-            fastFolderLabel.TabIndex = 8;
-            fastFolderLabel.Text = "Fast Folder";
             // 
             // fastFolderTextBox
             // 

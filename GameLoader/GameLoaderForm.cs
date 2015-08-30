@@ -28,7 +28,7 @@ namespace GameLoader
         public GameLoaderForm()
         {
             InitializeComponent();
-            this.Closing += OnClosing;
+            Closing += OnClosing;
             Games = new BindingList<Game>(LoadData());
             var source = new BindingSource(Games, null);
             folderGridView.DataSource = source;
@@ -46,6 +46,10 @@ namespace GameLoader
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             SaveData();
+            // We really shouldn't stop the process in the middle of moving files
+            if (workingProgress == WorkingProgress.BusyDoingNothing) return;
+            MessageBox.Show("Currently moving a game, please wait for it to finish.");
+            cancelEventArgs.Cancel = true;
         }
 
         private void SaveData()
@@ -112,6 +116,7 @@ namespace GameLoader
                 gameDataGroupbox.Enabled = true;
                 nameEditTextBox.Text = game.Name;
                 pathEditTextBox.Text = game.Path;
+                activateGameButton.Text = game.Status == GameStatus.Activated ? "Deactivate" : "Activate";
             }
         }
 
@@ -150,14 +155,58 @@ namespace GameLoader
                     MessageBox.Show("Please select a game first");
                     return;
                 }
-                game.Status = GameStatus.Loading;
-                folderGridView.Refresh();
-                GameController gameController = new GameController();
-                gameController.DoneMovingFiles += GameControllerOnDoneMovingFiles;
-                gameController.GameMoveProgress += GameControllerOnGameMoveProgress;
-                gameController.DoneEnablingGame += GameControllerOnDoneEnablingGame;
-                gameController.EnableGame(game);
+                GameController gameController;
+                switch (game.Status)
+                {
+                    case GameStatus.Deactivated:
+                        gameController = new GameController();
+                        gameController.StartMovingFiles += GameControllerOnStartMovingFiles;
+                        gameController.DoneMovingFiles += GameControllerOnDoneMovingFiles;
+                        gameController.GameMoveProgress += GameControllerOnGameMoveProgress;
+                        gameController.DoneEnablingGame += GameControllerOnDoneEnablingGame;
+                        gameController.EnableGame(game);
+                        break;
+                    case GameStatus.Activated:
+                        gameController = new GameController();
+                        gameController.StartMovingFiles += GameControllerOnStartMovingFiles;
+                        gameController.DoneMovingFiles += GameControllerOnDoneMovingFiles;
+                        gameController.GameMoveProgress += GameControllerOnGameMoveProgress;
+                        gameController.DoneDisablingGame += GameControllerOnDoneDisablingGame;
+                        gameController.DisableGame(game);
+                        break;
+                    case GameStatus.Loading:
+                        MessageBox.Show("Game is currently being loaded, please wait for it to finish. ");
+                        break;
+                    case GameStatus.Unloading:
+                        MessageBox.Show("Game is currently being unloaded, please wait for it to finish");
+                        break;
+                    default:
+                        MessageBox.Show("DUCK!! Please show this to a developer, because something broke!" + Environment.NewLine + Environment.StackTrace);
+                        break;
+                }
             }
+        }
+
+        private void GameControllerOnDoneDisablingGame(Game game)
+        {
+            if (folderGridView.InvokeRequired)
+            {
+                folderGridView.Invoke(new Action(() => GameControllerOnDoneDisablingGame(game)));
+            }
+            else
+            {
+                game.Status = GameStatus.Deactivated;
+                workingProgress = WorkingProgress.BusyDoingNothing;
+                folderGridView.Refresh();
+                statusToolStripLabel.Text = "Ready!";
+                SaveData();
+                folderGridView_CurrentCellChanged(null, null);
+            }
+        }
+
+        private void GameControllerOnStartMovingFiles()
+        {
+            workingProgress = WorkingProgress.Moving;
         }
 
         private void GameControllerOnDoneEnablingGame(Game game)
@@ -172,6 +221,8 @@ namespace GameLoader
                 workingProgress = WorkingProgress.BusyDoingNothing;
                 folderGridView.Refresh();
                 statusToolStripLabel.Text = "Ready!";
+                SaveData();
+                folderGridView_CurrentCellChanged(null, null);
             }
         }
 
@@ -211,6 +262,11 @@ namespace GameLoader
 
         private void saveFastFolderButton_Click(object sender, EventArgs e)
         {
+            if (Games.Any(g => g.Status != GameStatus.Deactivated))
+            {
+                MessageBox.Show("Not all games are deactivated, please do this first!");
+                return;
+            }
             string text = fastFolderTextBox.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -234,6 +290,16 @@ namespace GameLoader
             Config cfg = ldm.LoadConfig();
             cfg.OutputPath = text;
             ldm.SaveConfig(cfg);
+        }
+
+        private void newGamePathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string t = newGamePathTextBox.Text;
+            if (string.IsNullOrWhiteSpace(t)) return;
+            if (!string.IsNullOrWhiteSpace(newGameName.Text)) return;
+            FileInfo f = new FileInfo(t);
+            if (!f.Exists) return;
+            newGameName.Text = f.Name;
         }
     }
 }

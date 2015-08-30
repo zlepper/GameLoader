@@ -31,7 +31,7 @@ namespace GameLoader.IO
                 File.Delete(gamesPath);
             }
             catch (FileNotFoundException) {} catch(DirectoryNotFoundException) { }
-            string json = JsonConvert.SerializeObject(games);
+            string json = JsonConvert.SerializeObject(games, Formatting.Indented);
             File.WriteAllText(gamesPath, json);
         }
 
