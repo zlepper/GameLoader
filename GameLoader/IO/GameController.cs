@@ -137,13 +137,29 @@ namespace GameLoader.IO
                 {
                     f.Directory.Create();
                 }
-                file.CopyTo(outputfile, true);
+                try
+                {
+                    file.CopyTo(outputfile, true);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show($"Something went wrong when trying to move file \"{file.FullName}\" to \"{outputfile}\"");
+                    return;
+                }
             }
             OnDoneMovingFiles();
             for (int i = 0, len = files.Length; i < len; i++)
             {
                 OnGameMoveProgress(i, len);
-                files[i].Delete();
+                try
+                {
+                    files[i].Delete();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Something went wrong!" + Environment.NewLine + e.Message + Environment.NewLine + e.StackTrace);
+                    return;
+                }
             }
             di.Delete(true);
             CreateDirectoryJunction(outputPath, currentGame.Path);

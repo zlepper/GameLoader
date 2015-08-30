@@ -114,8 +114,11 @@ namespace GameLoader
                 SaveData();
                 return;
             }
-            MessageBox.Show("Currently moving a game, please wait for it to finish.");
-            cancelEventArgs.Cancel = true;
+            var r = MessageBox.Show("Currently moving a game, Closing the window now will cause issues, do you still want to exit GameLoader?", "Moving files!", MessageBoxButtons.YesNo);
+            if (r == DialogResult.No)
+            {
+                cancelEventArgs.Cancel = true;
+            }
         }
 
         private void SaveData()

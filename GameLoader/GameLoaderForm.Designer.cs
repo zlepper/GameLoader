@@ -108,6 +108,16 @@
             fastFolderLabel.TabIndex = 8;
             fastFolderLabel.Text = "Fast Folder";
             // 
+            // label5
+            // 
+            label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(13, 482);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(128, 13);
+            label5.TabIndex = 4;
+            label5.Text = "Add Auto-discovery folder";
+            // 
             // folderGridView
             // 
             this.folderGridView.AllowUserToAddRows = false;
@@ -244,23 +254,16 @@
             // 
             // AddAutoDiscoveryTextBox
             // 
+            this.AddAutoDiscoveryTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.AddAutoDiscoveryTextBox.Location = new System.Drawing.Point(12, 498);
             this.AddAutoDiscoveryTextBox.Name = "AddAutoDiscoveryTextBox";
             this.AddAutoDiscoveryTextBox.Size = new System.Drawing.Size(617, 20);
             this.AddAutoDiscoveryTextBox.TabIndex = 11;
             // 
-            // label5
-            // 
-            label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(13, 482);
-            label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(128, 13);
-            label5.TabIndex = 4;
-            label5.Text = "Add Auto-discovery folder";
-            // 
             // AddAutodiscoveryFolderButton
             // 
+            this.AddAutodiscoveryFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddAutodiscoveryFolderButton.Location = new System.Drawing.Point(635, 498);
             this.AddAutodiscoveryFolderButton.Name = "AddAutodiscoveryFolderButton";
             this.AddAutodiscoveryFolderButton.Size = new System.Drawing.Size(75, 23);
