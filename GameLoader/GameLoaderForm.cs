@@ -150,7 +150,8 @@ namespace GameLoader
                     MessageBox.Show("Please select a game first");
                     return;
                 }
-
+                game.Status = GameStatus.Loading;
+                folderGridView.Refresh();
                 GameController gameController = new GameController();
                 gameController.DoneMovingFiles += GameControllerOnDoneMovingFiles;
                 gameController.GameMoveProgress += GameControllerOnGameMoveProgress;

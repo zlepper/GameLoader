@@ -96,9 +96,10 @@ namespace GameLoader.IO {
         {
             var ldm = new LocalDataManager();
             var cfg = ldm.LoadConfig();
-            if (!Directory.Exists(cfg.OutputPath))
+            string outputPath = Path.Combine(cfg.OutputPath, currentGame.Name);
+            if (!Directory.Exists(outputPath))
             {
-                Directory.CreateDirectory(cfg.OutputPath);
+                Directory.CreateDirectory(outputPath);
             }
             DirectoryInfo di = new DirectoryInfo(currentGame.Path);
             var files = di.GetFiles("*", SearchOption.AllDirectories);
@@ -106,7 +107,7 @@ namespace GameLoader.IO {
             {
                 OnGameMoveProgress(i, len);
                 var file = files[i];
-                file.CopyTo(CalculateOutputFilePath(cfg.OutputPath, file, di));
+                file.CopyTo(CalculateOutputFilePath(outputPath, file, di));
             }
             OnDoneMovingFiles();
             for(int i = 0, len = files.Length; i < len; i++)
@@ -115,6 +116,7 @@ namespace GameLoader.IO {
                 files[i].Delete();
             }
             di.Delete(true);
+            CreateHardLink(outputPath, currentGame.Path, IntPtr.Zero);
 
         }
 
