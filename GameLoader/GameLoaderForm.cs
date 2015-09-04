@@ -310,6 +310,11 @@ namespace GameLoader
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                if (statusStipProgressBar.ProgressBar != null)
+                {
+                    statusStipProgressBar.ProgressBar.Maximum = count;
+                    statusStipProgressBar.ProgressBar.Value = progress;
+                }
             }
         }
 

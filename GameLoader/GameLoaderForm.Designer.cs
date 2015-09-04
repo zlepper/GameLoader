@@ -51,6 +51,7 @@
             this.AddAutodiscoveryFolderButton = new System.Windows.Forms.Button();
             this.BrowseForAutoDiscoveryFolderButton = new System.Windows.Forms.Button();
             this.BrowseForGamePath = new System.Windows.Forms.Button();
+            this.statusStipProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -221,6 +222,7 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStipProgressBar,
             this.statusToolStripLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 560);
             this.statusStrip1.Name = "statusStrip1";
@@ -296,6 +298,11 @@
             this.BrowseForGamePath.UseVisualStyleBackColor = true;
             this.BrowseForGamePath.Click += new System.EventHandler(this.BrowseForGamePathButton_Click);
             // 
+            // statusStipProgressBar
+            // 
+            this.statusStipProgressBar.Name = "statusStipProgressBar";
+            this.statusStipProgressBar.Size = new System.Drawing.Size(100, 16);
+            // 
             // GameLoaderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -349,6 +356,7 @@
         private System.Windows.Forms.Button AddAutodiscoveryFolderButton;
         private System.Windows.Forms.Button BrowseForAutoDiscoveryFolderButton;
         private System.Windows.Forms.Button BrowseForGamePath;
+        private System.Windows.Forms.ToolStripProgressBar statusStipProgressBar;
     }
 }
 
