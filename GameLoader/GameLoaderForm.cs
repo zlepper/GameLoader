@@ -25,12 +25,16 @@ namespace GameLoader
         /// </summary>
         private bool movingGame = false;
 
+        /// <summary>
+        /// Keeps track of what we are currently doing
+        /// </summary>
         private WorkingProgress workingProgress = WorkingProgress.BusyDoingNothing;
 
         public GameLoaderForm()
         {
             InitializeComponent();
             Closing += OnClosing;
+            folderGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             folderGridView.UserDeletingRow += delegate(object sender, DataGridViewRowCancelEventArgs args)
             {
                 Game game = args.Row.DataBoundItem as Game;
