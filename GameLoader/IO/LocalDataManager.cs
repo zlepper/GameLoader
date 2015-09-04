@@ -46,9 +46,28 @@ namespace GameLoader.IO
             }
             catch (DirectoryNotFoundException)
             {
+                var f = new FileInfo(configPath);
+                var d = f.Directory;
+                if (d != null && !d.Exists)
+                {
+                    d.Create();
+                }
             }
-            string json = JsonConvert.SerializeObject(config, Formatting.Indented);
-            File.WriteAllText(configPath, json);
+            try
+            {
+                string json = JsonConvert.SerializeObject(config, Formatting.Indented);
+                File.WriteAllText(configPath, json);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                var f = new FileInfo(configPath);
+                var d = f.Directory;
+                if (d != null && !d.Exists)
+                {
+                    d.Create();
+                }
+                SaveConfig(config);
+            }
         }
 
         public Config LoadConfig()
