@@ -45,14 +45,14 @@ namespace GameLoader
                 }
             };
             Games = new BindingList<Game>(LoadData());
-            var source = new BindingSource(Games, null);
+            BindingSource source = new BindingSource(Games, null);
             folderGridView.DataSource = source;
             LoadConfig();
         }
 
         private void LoadConfig()
         {
-            var ldm = new LocalDataManager();
+            LocalDataManager ldm = new LocalDataManager();
             Config cfg = ldm.LoadConfig();
             fastFolderTextBox.Text = cfg.OutputPath;
             if (cfg.FirstRun)
@@ -63,7 +63,7 @@ namespace GameLoader
                     MessageBox.Show(
                         "This is the first time you are running GameLoader, do you want it to check for installed games?",
                         "Check for games", MessageBoxButtons.YesNo);
-                var fs = cfg.GamesFolders;
+                List<string> fs = cfg.GamesFolders;
                 if (result == DialogResult.Yes)
                 {
                     string[] paths = GameSuggestions.GetGameFolders();
@@ -118,7 +118,7 @@ namespace GameLoader
                 SaveData();
                 return;
             }
-            var r = MessageBox.Show("Currently moving a game, Closing the window now will cause issues, do you still want to exit GameLoader?", "Moving files!", MessageBoxButtons.YesNo);
+            DialogResult r = MessageBox.Show("Currently moving a game, Closing the window now will cause issues, do you still want to exit GameLoader?", "Moving files!", MessageBoxButtons.YesNo);
             if (r == DialogResult.No)
             {
                 cancelEventArgs.Cancel = true;
@@ -128,7 +128,7 @@ namespace GameLoader
         private void SaveData()
         {
             List<Game> ga = Games.ToList();
-            var ldm = new LocalDataManager();
+            LocalDataManager ldm = new LocalDataManager();
             ldm.SaveGames(ga);
         }
 
@@ -160,6 +160,8 @@ namespace GameLoader
             GameAdder adder = new GameAdder();
             adder.DataReady += AdderOnDataReady;
             adder.AddGame(result, name);
+            newGamePathTextBox.Text = "";
+            newGameName.Text = "";
         }
 
         private void folderGridView_CurrentCellChanged(object sender, EventArgs e)
@@ -349,7 +351,7 @@ namespace GameLoader
                 else
                     return;
             }
-            var ldm = new LocalDataManager();
+            LocalDataManager ldm = new LocalDataManager();
             Config cfg = ldm.LoadConfig();
             cfg.OutputPath = text;
             ldm.SaveConfig(cfg);
@@ -360,7 +362,7 @@ namespace GameLoader
             string t = newGamePathTextBox.Text;
             if (string.IsNullOrWhiteSpace(t)) return;
             if (!string.IsNullOrWhiteSpace(newGameName.Text)) return;
-            var f = new DirectoryInfo(t);
+            DirectoryInfo f = new DirectoryInfo(t);
             if (!f.Exists) return;
             newGameName.Text = f.Name;
         }
@@ -374,12 +376,53 @@ namespace GameLoader
                 MessageBox.Show("Directory does not exist");
                 return;
             }
-            var ldm = new LocalDataManager();
-            var cfg = ldm.LoadConfig();
+            LocalDataManager ldm = new LocalDataManager();
+            Config cfg = ldm.LoadConfig();
             cfg.GamesFolders.Add(t);
             GameAdder ga = new GameAdder();
             ga.DataReady += AdderOnDataReady;
             ga.AddGames(GameSuggestions.GetGameFolders(t));
+            AddAutoDiscoveryTextBox.Text = "";
+        }
+
+        private void BrowseForGamePathButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog
+            {
+                Description = "Select the root folder of the game install.",
+                ShowNewFolderButton = false
+            };
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string path = dialog.SelectedPath;
+                if (!Directory.Exists(path))
+                {
+                    MessageBox.Show("Cannot find directory, please try again.");
+                    return;
+                }
+                newGamePathTextBox.Text = path;
+            }
+        }
+
+        private void BrowseForAutoDiscoveryFolderButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog
+            {
+                Description = "Select a folder which contains a lot of game.",
+                ShowNewFolderButton = false
+            };
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string path = dialog.SelectedPath;
+                if (!Directory.Exists(path))
+                {
+                    MessageBox.Show("Cannot find directory, please try again.");
+                    return;
+                }
+                AddAutoDiscoveryTextBox.Text = path;
+            }
         }
     }
 }

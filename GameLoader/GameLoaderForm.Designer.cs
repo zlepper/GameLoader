@@ -49,6 +49,8 @@
             this.saveFastFolderButton = new System.Windows.Forms.Button();
             this.AddAutoDiscoveryTextBox = new System.Windows.Forms.TextBox();
             this.AddAutodiscoveryFolderButton = new System.Windows.Forms.Button();
+            this.BrowseForAutoDiscoveryFolderButton = new System.Windows.Forms.Button();
+            this.BrowseForGamePath = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -140,7 +142,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.newGamePathTextBox.Location = new System.Drawing.Point(150, 456);
             this.newGamePathTextBox.Name = "newGamePathTextBox";
-            this.newGamePathTextBox.Size = new System.Drawing.Size(479, 20);
+            this.newGamePathTextBox.Size = new System.Drawing.Size(398, 20);
             this.newGamePathTextBox.TabIndex = 1;
             this.newGamePathTextBox.TextChanged += new System.EventHandler(this.newGamePathTextBox_TextChanged);
             // 
@@ -258,7 +260,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AddAutoDiscoveryTextBox.Location = new System.Drawing.Point(12, 498);
             this.AddAutoDiscoveryTextBox.Name = "AddAutoDiscoveryTextBox";
-            this.AddAutoDiscoveryTextBox.Size = new System.Drawing.Size(617, 20);
+            this.AddAutoDiscoveryTextBox.Size = new System.Drawing.Size(536, 20);
             this.AddAutoDiscoveryTextBox.TabIndex = 11;
             // 
             // AddAutodiscoveryFolderButton
@@ -272,11 +274,35 @@
             this.AddAutodiscoveryFolderButton.UseVisualStyleBackColor = true;
             this.AddAutodiscoveryFolderButton.Click += new System.EventHandler(this.AddAutodiscoveryFolderButton_Click);
             // 
+            // BrowseForAutoDiscoveryFolderButton
+            // 
+            this.BrowseForAutoDiscoveryFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BrowseForAutoDiscoveryFolderButton.Location = new System.Drawing.Point(554, 498);
+            this.BrowseForAutoDiscoveryFolderButton.Name = "BrowseForAutoDiscoveryFolderButton";
+            this.BrowseForAutoDiscoveryFolderButton.Size = new System.Drawing.Size(75, 23);
+            this.BrowseForAutoDiscoveryFolderButton.TabIndex = 13;
+            this.BrowseForAutoDiscoveryFolderButton.Text = "Browse";
+            this.BrowseForAutoDiscoveryFolderButton.UseVisualStyleBackColor = true;
+            this.BrowseForAutoDiscoveryFolderButton.Click += new System.EventHandler(this.BrowseForAutoDiscoveryFolderButton_Click);
+            // 
+            // BrowseForGamePath
+            // 
+            this.BrowseForGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BrowseForGamePath.Location = new System.Drawing.Point(554, 453);
+            this.BrowseForGamePath.Name = "BrowseForGamePath";
+            this.BrowseForGamePath.Size = new System.Drawing.Size(75, 23);
+            this.BrowseForGamePath.TabIndex = 14;
+            this.BrowseForGamePath.Text = "Browse";
+            this.BrowseForGamePath.UseVisualStyleBackColor = true;
+            this.BrowseForGamePath.Click += new System.EventHandler(this.BrowseForGamePathButton_Click);
+            // 
             // GameLoaderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(722, 582);
+            this.Controls.Add(this.BrowseForGamePath);
+            this.Controls.Add(this.BrowseForAutoDiscoveryFolderButton);
             this.Controls.Add(this.AddAutodiscoveryFolderButton);
             this.Controls.Add(this.AddAutoDiscoveryTextBox);
             this.Controls.Add(this.saveFastFolderButton);
@@ -321,6 +347,8 @@
         private System.Windows.Forms.Button saveFastFolderButton;
         private System.Windows.Forms.TextBox AddAutoDiscoveryTextBox;
         private System.Windows.Forms.Button AddAutodiscoveryFolderButton;
+        private System.Windows.Forms.Button BrowseForAutoDiscoveryFolderButton;
+        private System.Windows.Forms.Button BrowseForGamePath;
     }
 }
 
