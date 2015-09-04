@@ -59,37 +59,49 @@ namespace GameLoader
             {
                 cfg.FirstRun = false;
                 ldm.SaveConfig(cfg);
-                DialogResult result =
+                using (BackgroundWorker bw = new BackgroundWorker())
+                {
+                    bw.DoWork += BackgroundWorkerScanForGames;
+                    bw.RunWorkerAsync();
+                }
+            }
+        }
+
+        private void BackgroundWorkerScanForGames(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            workingProgress = WorkingProgress.ScanningForGames;
+            var ldm = new LocalDataManager();
+            var cfg = ldm.LoadConfig();
+            DialogResult result =
                     MessageBox.Show(
                         "This is the first time you are running GameLoader, do you want it to check for installed games?",
                         "Check for games", MessageBoxButtons.YesNo);
-                List<string> fs = cfg.GamesFolders;
+            List<string> fs = cfg.GamesFolders;
+            if (result == DialogResult.Yes)
+            {
+                string[] paths = GameSuggestions.GetGameFolders();
+                string question = "I found these paths: " + Environment.NewLine + string.Join(Environment.NewLine, paths) + Environment.NewLine + "Do you want to use them?" + Environment.NewLine + "You can add other folders to auto-discovery later if you want. ";
+                result = MessageBox.Show(question, "Found paths", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
-                    string[] paths = GameSuggestions.GetGameFolders();
-                    string question = "I found these paths: " + Environment.NewLine + string.Join(Environment.NewLine, paths) + Environment.NewLine + "Do you want to use them?" + Environment.NewLine  + "You can add other folders to auto-discovery later if you want. ";
-                    result = MessageBox.Show(question, "Found paths", MessageBoxButtons.YesNo);
-                    if (result == DialogResult.Yes)
-                    {
-                        fs.AddRange(paths);
-                    }
+                    fs.AddRange(paths.Distinct());
                 }
-                ldm.SaveConfig(cfg);
-                using (BackgroundWorker bw = new BackgroundWorker())
+            }
+            ldm.SaveConfig(cfg);
+            using (BackgroundWorker bw = new BackgroundWorker())
+            {
+                bw.DoWork += delegate
                 {
-                    bw.DoWork += delegate
+                    foreach (string folder in fs)
                     {
-                        foreach (string folder in fs)
-                        {
-                            string[] paths = GameSuggestions.GetGameFolders(folder);
-                            GameAdder ga = new GameAdder();
-                            ga.DataReady += AdderOnDataReady;
-                            ga.AddGames(paths);
-                        }
-                    };
-                    bw.RunWorkerAsync();
-                }
-                
+                        string[] paths = GameSuggestions.GetGameFolders(folder);
+                        GameAdder ga = new GameAdder();
+                        ga.DataReady += AdderOnDataReady;
+                        ga.AddGames(paths);
+                    }
+                    workingProgress = WorkingProgress.BusyDoingNothing;
+                };
+                bw.RunWorkerAsync();
             }
         }
 
@@ -118,7 +130,7 @@ namespace GameLoader
                 SaveData();
                 return;
             }
-            DialogResult r = MessageBox.Show("Currently moving a game, Closing the window now will cause issues, do you still want to exit GameLoader?", "Moving files!", MessageBoxButtons.YesNo);
+            DialogResult r = MessageBox.Show("Currently moving a game(Or scanning for games), Closing the window now will cause issues, do you still want to exit GameLoader?", "Moving files!", MessageBoxButtons.YesNo);
             if (r == DialogResult.No)
             {
                 cancelEventArgs.Cancel = true;
@@ -327,7 +339,8 @@ namespace GameLoader
         {
             Moving,
             Deleting,
-            BusyDoingNothing
+            BusyDoingNothing,
+            ScanningForGames
         }
 
         private void saveFastFolderButton_Click(object sender, EventArgs e)
