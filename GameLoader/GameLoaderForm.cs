@@ -43,6 +43,11 @@ namespace GameLoader
                     MessageBox.Show("You need to deactivate the game before you can delete it from GameLoader");
                     args.Cancel = true;
                 }
+                else
+                {
+                    LocalDataManager ldm = new LocalDataManager();
+                    ldm.SaveGames(Games.ToList());
+                }
             };
             Games = new BindingList<Game>(LoadData());
             BindingSource source = new BindingSource(Games, null);
@@ -64,6 +69,10 @@ namespace GameLoader
                     bw.DoWork += BackgroundWorkerScanForGames;
                     bw.RunWorkerAsync();
                 }
+            }
+            else
+            {
+                SearchFoldersForGames(cfg.GamesFolders);
             }
         }
 
@@ -88,6 +97,11 @@ namespace GameLoader
                 }
             }
             ldm.SaveConfig(cfg);
+            SearchFoldersForGames(fs);
+        }
+
+        private void SearchFoldersForGames(List<string> fs)
+        {
             using (BackgroundWorker bw = new BackgroundWorker())
             {
                 bw.DoWork += delegate

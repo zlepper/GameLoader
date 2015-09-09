@@ -51,6 +51,9 @@ namespace GameLoader.IO
                 totalFilesSize += files[i].Length;
             }
 
+            // There are no files, so no point in actually adding the list
+            if (totalFilesSize == 0) return;
+
             // Emit an event we can listen for
             OnDataReady(directory.FullName, totalFilesSize, count, name);
         }
