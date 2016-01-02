@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GameLoader;
@@ -143,27 +145,41 @@ namespace GameLoader.IO
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show($"Something went wrong when trying to move file \"{file.FullName}\" to \"{outputfile}\"");
-                    return;
+                    if (!CalculateMd5(file.FullName).Equals(CalculateMd5(outputfile)))
+                    {
+                        MessageBox.Show(
+                            $"Something went wrong when trying to move file \"{file.FullName}\" to \"{outputfile}\"");
+                        return;
+                    }
                 }
             }
             OnDoneMovingFiles();
-            for (int i = 0, len = files.Length; i < len; i++)
-            {
-                OnGameMoveProgress(i, len);
-                try
-                {
-                    files[i].Delete();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Something went wrong!" + Environment.NewLine + e.Message + Environment.NewLine + e.StackTrace);
-                    return;
-                }
-            }
-            di.Delete(true);
+            string newPath = di.FullName + ".oldGameLoader";
+            di.MoveTo(newPath);
+
             CreateDirectoryJunction(outputPath, currentGame.Path);
             OnDoneEnablingGame(currentGame);
+        }
+
+        public static string CalculateMd5(string file)
+        {
+            using (var md5 = MD5.Create())
+            {
+                while (true)
+                {
+                    try
+                    {
+                        using (var stream = File.OpenRead(file))
+                        {
+                            return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty);
+                        }
+                    }
+                    catch
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+            }
         }
 
         private void CreateDirectoryJunction(string sourceDirectory, string destinationDirectory)
@@ -241,37 +257,63 @@ namespace GameLoader.IO
             currentGame.Status = GameStatus.Unloading;
             LocalDataManager ldm = new LocalDataManager();
             Config cfg = ldm.LoadConfig();
-            DirectoryInfo gameDirectory = new DirectoryInfo(currentGame.Path);
-            if (gameDirectory.Exists)
+            
+            DirectoryInfo gameDirectory = new DirectoryInfo(currentGame.Path + ".oldGameLoader");
+            if (!gameDirectory.Exists)
             {
-                gameDirectory.Delete();
-            }
-            gameDirectory.Create();
-            DirectoryInfo gameLoaderDirectory = new DirectoryInfo(PathCombine(cfg.OutputPath, currentGame.Name));
-            OnStartMovingFiles();
-            FileInfo[] files = gameLoaderDirectory.GetFiles("*", SearchOption.AllDirectories);
-            currentGame.FileCount = files.Length;
-            currentGame.Size = files.Sum(t => t.Length);
-            for (int i = 0, len = files.Length; i < len; i++)
-            {
-                OnGameMoveProgress(i, len);
-                FileInfo file = files[i];
-                string outputfile = CalculateOutputFilePath(gameDirectory, file, gameLoaderDirectory);
-                FileInfo f = new FileInfo(outputfile);
-                if (f.Directory != null && !f.Directory.Exists)
+                gameDirectory = new DirectoryInfo(currentGame.Path);
+                if (gameDirectory.Exists)
                 {
-                    f.Directory.Create();
+                    gameDirectory.Delete();
                 }
-                file.CopyTo(outputfile, true);
+                gameDirectory.Create();
+                DirectoryInfo gameLoaderDirectory = new DirectoryInfo(PathCombine(cfg.OutputPath, currentGame.Name));
+                OnStartMovingFiles();
+                FileInfo[] files = gameLoaderDirectory.GetFiles("*", SearchOption.AllDirectories);
+                currentGame.FileCount = files.Length;
+                currentGame.Size = files.Sum(t => t.Length);
+                for (int i = 0, len = files.Length; i < len; i++)
+                {
+                    OnGameMoveProgress(i, len);
+                    FileInfo file = files[i];
+                    string outputfile = CalculateOutputFilePath(gameDirectory, file, gameLoaderDirectory);
+                    FileInfo f = new FileInfo(outputfile);
+                    if (f.Directory != null && !f.Directory.Exists)
+                    {
+                        f.Directory.Create();
+                    }
+                    file.CopyTo(outputfile, true);
+                }
+                OnDoneMovingFiles();
+                for (int i = 0, len = files.Length; i < len; i++)
+                {
+                    OnGameMoveProgress(i, len);
+                    files[i].Delete();
+                }
+                gameLoaderDirectory.Delete(true);
+                OnDoneDisablingGame(currentGame);
             }
-            OnDoneMovingFiles();
-            for (int i = 0, len = files.Length; i < len; i++)
+            else
             {
-                OnGameMoveProgress(i, len);
-                files[i].Delete();
+                OnStartMovingFiles();
+                if (Directory.Exists(currentGame.Path))
+                {
+                    Directory.Delete(currentGame.Path, true);
+                }
+                gameDirectory.MoveTo(currentGame.Path);
+
+                OnDoneMovingFiles();
+
+                DirectoryInfo gameLoaderDirectory = new DirectoryInfo(PathCombine(cfg.OutputPath, currentGame.Name));
+                FileInfo[] files = gameLoaderDirectory.GetFiles("*", SearchOption.AllDirectories);
+                for (int i = 0, len = files.Length; i < len; i++)
+                {
+                    OnGameMoveProgress(i, len);
+                    files[i].Delete();
+                }
+                gameLoaderDirectory.Delete(true);
+                OnDoneDisablingGame(currentGame);
             }
-            gameLoaderDirectory.Delete(true);
-            OnDoneDisablingGame(currentGame);
         }
     }
 }

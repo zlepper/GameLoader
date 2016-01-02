@@ -130,6 +130,7 @@ namespace GameLoader
                 Game game = new Game(path, name, size, count);
                 // Don't add a game already in the list
                 if (Games.Any(g => g.Path.Equals(game.Path))) return;
+                if (game.Path.EndsWith(".oldGameLoader")) return;
                 Games.Add(game);
                 SaveData();
                 folderGridView.Refresh();
@@ -328,7 +329,7 @@ namespace GameLoader
                 switch (workingProgress)
                 {
                     case WorkingProgress.Moving:
-                        statusToolStripLabel.Text = string.Format("Moving file {0} of {1}!", progress, count);
+                        statusToolStripLabel.Text = string.Format("Copying file {0} of {1}!", progress, count);
                         break;
                     case WorkingProgress.Deleting:
                         statusToolStripLabel.Text = string.Format("Deleting file {0} of {1}!", progress, count);
