@@ -49,10 +49,15 @@ namespace GameLoader
                     ldm.SaveGames(Games.ToList());
                 }
             };
+            SetupGamesView();
+            LoadConfig();
+        }
+
+        private void SetupGamesView()
+        {
             Games = new BindingList<Game>(LoadData());
             BindingSource source = new BindingSource(Games, null);
             folderGridView.DataSource = source;
-            LoadConfig();
         }
 
         private void LoadConfig()
@@ -463,6 +468,17 @@ namespace GameLoader
                     return;
                 }
                 AddAutoDiscoveryTextBox.Text = path;
+            }
+        }
+
+        private void resetApplicationStateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialogResult = MessageBox.Show("Are you sure you want to reset the application state? If you have any games currently loaded, you will have to reset them manually. ", "Reset application state", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                LocalDataManager.ResetApplication();
+                SetupGamesView();
+                LoadConfig();
             }
         }
     }

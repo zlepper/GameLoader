@@ -46,13 +46,16 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusStipProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.FileProgressStatusStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.fastFolderTextBox = new System.Windows.Forms.TextBox();
             this.saveFastFolderButton = new System.Windows.Forms.Button();
             this.AddAutoDiscoveryTextBox = new System.Windows.Forms.TextBox();
             this.AddAutodiscoveryFolderButton = new System.Windows.Forms.Button();
             this.BrowseForAutoDiscoveryFolderButton = new System.Windows.Forms.Button();
             this.BrowseForGamePath = new System.Windows.Forms.Button();
-            this.FileProgressStatusStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetApplicationStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -62,6 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.folderGridView)).BeginInit();
             this.gameDataGroupbox.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -130,11 +134,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.folderGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.folderGridView.Location = new System.Drawing.Point(13, 13);
+            this.folderGridView.Location = new System.Drawing.Point(13, 27);
             this.folderGridView.MultiSelect = false;
             this.folderGridView.Name = "folderGridView";
             this.folderGridView.ReadOnly = true;
-            this.folderGridView.Size = new System.Drawing.Size(544, 421);
+            this.folderGridView.Size = new System.Drawing.Size(544, 407);
             this.folderGridView.TabIndex = 0;
             this.folderGridView.CurrentCellChanged += new System.EventHandler(this.folderGridView_CurrentCellChanged);
             // 
@@ -178,9 +182,9 @@
             this.gameDataGroupbox.Controls.Add(this.pathEditTextBox);
             this.gameDataGroupbox.Controls.Add(this.nameEditTextBox);
             this.gameDataGroupbox.Enabled = false;
-            this.gameDataGroupbox.Location = new System.Drawing.Point(563, 13);
+            this.gameDataGroupbox.Location = new System.Drawing.Point(563, 27);
             this.gameDataGroupbox.Name = "gameDataGroupbox";
-            this.gameDataGroupbox.Size = new System.Drawing.Size(146, 420);
+            this.gameDataGroupbox.Size = new System.Drawing.Size(146, 406);
             this.gameDataGroupbox.TabIndex = 6;
             this.gameDataGroupbox.TabStop = false;
             this.gameDataGroupbox.Text = "Game Data";
@@ -188,7 +192,7 @@
             // activateGameButton
             // 
             this.activateGameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.activateGameButton.Location = new System.Drawing.Point(9, 391);
+            this.activateGameButton.Location = new System.Drawing.Point(9, 377);
             this.activateGameButton.Name = "activateGameButton";
             this.activateGameButton.Size = new System.Drawing.Size(131, 23);
             this.activateGameButton.TabIndex = 4;
@@ -242,6 +246,11 @@
             this.statusToolStripLabel.Name = "statusToolStripLabel";
             this.statusToolStripLabel.Size = new System.Drawing.Size(42, 17);
             this.statusToolStripLabel.Text = "Ready!";
+            // 
+            // FileProgressStatusStripLabel
+            // 
+            this.FileProgressStatusStripLabel.Name = "FileProgressStatusStripLabel";
+            this.FileProgressStatusStripLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // fastFolderTextBox
             // 
@@ -305,10 +314,30 @@
             this.BrowseForGamePath.UseVisualStyleBackColor = true;
             this.BrowseForGamePath.Click += new System.EventHandler(this.BrowseForGamePathButton_Click);
             // 
-            // FileProgressStatusStripLabel
+            // menuStrip1
             // 
-            this.FileProgressStatusStripLabel.Name = "FileProgressStatusStripLabel";
-            this.FileProgressStatusStripLabel.Size = new System.Drawing.Size(0, 17);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(722, 24);
+            this.menuStrip1.TabIndex = 15;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetApplicationStateToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(61, 20);
+            this.toolStripMenuItem1.Text = "Settings";
+            // 
+            // resetApplicationStateToolStripMenuItem
+            // 
+            this.resetApplicationStateToolStripMenuItem.Name = "resetApplicationStateToolStripMenuItem";
+            this.resetApplicationStateToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.resetApplicationStateToolStripMenuItem.Text = "Reset application state";
+            this.resetApplicationStateToolStripMenuItem.Click += new System.EventHandler(this.resetApplicationStateToolStripMenuItem_Click);
             // 
             // GameLoaderForm
             // 
@@ -323,6 +352,7 @@
             this.Controls.Add(this.fastFolderTextBox);
             this.Controls.Add(fastFolderLabel);
             this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.gameDataGroupbox);
             this.Controls.Add(label2);
             this.Controls.Add(label5);
@@ -331,6 +361,7 @@
             this.Controls.Add(this.addNewGameButton);
             this.Controls.Add(this.newGamePathTextBox);
             this.Controls.Add(this.folderGridView);
+            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(738, 400);
             this.Name = "GameLoaderForm";
             this.Text = "Game Loader";
@@ -339,6 +370,8 @@
             this.gameDataGroupbox.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -365,6 +398,9 @@
         private System.Windows.Forms.Button BrowseForGamePath;
         private System.Windows.Forms.ToolStripProgressBar statusStipProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel FileProgressStatusStripLabel;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem resetApplicationStateToolStripMenuItem;
     }
 }
 

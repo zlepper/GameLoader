@@ -12,41 +12,41 @@ namespace GameLoader.IO
 {
     public class LocalDataManager
     {
-        private readonly string gamesPath =
+        private static readonly string GamesPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GameLoader", "games.json");
-        private readonly string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GameLoader", "config.json");
+        private static readonly string ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GameLoader", "config.json");
 
         public List<Game> LoadGames()
         {
-            if (!File.Exists(gamesPath)) return new List<Game>();
-            string json = File.ReadAllText(gamesPath);
+            if (!File.Exists(GamesPath)) return new List<Game>();
+            string json = File.ReadAllText(GamesPath);
             return JsonConvert.DeserializeObject<List<Game>>(json);
         }
 
         public void SaveGames(List<Game> games)
         {
-            new FileInfo(gamesPath).Directory?.Create();
+            new FileInfo(GamesPath).Directory?.Create();
             try
             {
-                File.Delete(gamesPath);
+                File.Delete(GamesPath);
             }
             catch (FileNotFoundException) {} catch(DirectoryNotFoundException) { }
             string json = JsonConvert.SerializeObject(games, Formatting.Indented);
-            File.WriteAllText(gamesPath, json);
+            File.WriteAllText(GamesPath, json);
         }
 
         public void SaveConfig(Config config)
         {
             try
             {
-                File.Delete(configPath);
+                File.Delete(ConfigPath);
             }
             catch (FileNotFoundException)
             {
             }
             catch (DirectoryNotFoundException)
             {
-                var f = new FileInfo(configPath);
+                var f = new FileInfo(ConfigPath);
                 var d = f.Directory;
                 if (d != null && !d.Exists)
                 {
@@ -56,11 +56,11 @@ namespace GameLoader.IO
             try
             {
                 string json = JsonConvert.SerializeObject(config, Formatting.Indented);
-                File.WriteAllText(configPath, json);
+                File.WriteAllText(ConfigPath, json);
             }
             catch (DirectoryNotFoundException)
             {
-                var f = new FileInfo(configPath);
+                var f = new FileInfo(ConfigPath);
                 var d = f.Directory;
                 if (d != null && !d.Exists)
                 {
@@ -72,9 +72,21 @@ namespace GameLoader.IO
 
         public Config LoadConfig()
         {
-            if(!File.Exists(configPath)) return new Config();
-            string json = File.ReadAllText(configPath);
+            if(!File.Exists(ConfigPath)) return new Config();
+            string json = File.ReadAllText(ConfigPath);
             return JsonConvert.DeserializeObject<Config>(json);
+        }
+
+        /// <summary>
+        /// Resets the application state to completely new. Useful if you say change a hard disk drive
+        /// 
+        /// And before you ask me what somebody would want to do that, look at this ticket: 
+        /// https://github.com/zlepper/GameLoader/issues/10
+        /// </summary>
+        public static void ResetApplication()
+        {
+            File.Delete(GamesPath);
+            File.Delete(ConfigPath);
         }
 
     }
