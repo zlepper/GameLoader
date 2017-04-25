@@ -114,7 +114,7 @@ namespace GameLoader.IO
             return GetTotalFreeSpace(letter) > game.Size;
         }
 
-        private long GetTotalFreeSpace(string driveName)
+        public long GetTotalFreeSpace(string driveName)
         {
             foreach (DriveInfo drive in DriveInfo.GetDrives().Where(drive => drive.IsReady && drive.Name == driveName))
             {

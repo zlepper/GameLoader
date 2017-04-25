@@ -56,6 +56,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.resetApplicationStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DiskSpaceLeftLabel = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -155,7 +156,7 @@
             // addNewGameButton
             // 
             this.addNewGameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addNewGameButton.Location = new System.Drawing.Point(635, 453);
+            this.addNewGameButton.Location = new System.Drawing.Point(635, 454);
             this.addNewGameButton.Name = "addNewGameButton";
             this.addNewGameButton.Size = new System.Drawing.Size(75, 23);
             this.addNewGameButton.TabIndex = 2;
@@ -258,13 +259,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fastFolderTextBox.Location = new System.Drawing.Point(78, 537);
             this.fastFolderTextBox.Name = "fastFolderTextBox";
-            this.fastFolderTextBox.Size = new System.Drawing.Size(551, 20);
+            this.fastFolderTextBox.Size = new System.Drawing.Size(470, 20);
             this.fastFolderTextBox.TabIndex = 9;
+            this.fastFolderTextBox.TextChanged += new System.EventHandler(this.fastFolderTextBox_TextChanged);
             // 
             // saveFastFolderButton
             // 
             this.saveFastFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveFastFolderButton.Location = new System.Drawing.Point(635, 535);
+            this.saveFastFolderButton.Location = new System.Drawing.Point(554, 535);
             this.saveFastFolderButton.Name = "saveFastFolderButton";
             this.saveFastFolderButton.Size = new System.Drawing.Size(75, 23);
             this.saveFastFolderButton.TabIndex = 10;
@@ -284,7 +286,7 @@
             // AddAutodiscoveryFolderButton
             // 
             this.AddAutodiscoveryFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddAutodiscoveryFolderButton.Location = new System.Drawing.Point(635, 498);
+            this.AddAutodiscoveryFolderButton.Location = new System.Drawing.Point(635, 495);
             this.AddAutodiscoveryFolderButton.Name = "AddAutodiscoveryFolderButton";
             this.AddAutodiscoveryFolderButton.Size = new System.Drawing.Size(75, 23);
             this.AddAutodiscoveryFolderButton.TabIndex = 12;
@@ -295,7 +297,7 @@
             // BrowseForAutoDiscoveryFolderButton
             // 
             this.BrowseForAutoDiscoveryFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseForAutoDiscoveryFolderButton.Location = new System.Drawing.Point(554, 498);
+            this.BrowseForAutoDiscoveryFolderButton.Location = new System.Drawing.Point(554, 496);
             this.BrowseForAutoDiscoveryFolderButton.Name = "BrowseForAutoDiscoveryFolderButton";
             this.BrowseForAutoDiscoveryFolderButton.Size = new System.Drawing.Size(75, 23);
             this.BrowseForAutoDiscoveryFolderButton.TabIndex = 13;
@@ -306,7 +308,7 @@
             // BrowseForGamePath
             // 
             this.BrowseForGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseForGamePath.Location = new System.Drawing.Point(554, 453);
+            this.BrowseForGamePath.Location = new System.Drawing.Point(554, 454);
             this.BrowseForGamePath.Name = "BrowseForGamePath";
             this.BrowseForGamePath.Size = new System.Drawing.Size(75, 23);
             this.BrowseForGamePath.TabIndex = 14;
@@ -339,11 +341,21 @@
             this.resetApplicationStateToolStripMenuItem.Text = "Reset application state";
             this.resetApplicationStateToolStripMenuItem.Click += new System.EventHandler(this.resetApplicationStateToolStripMenuItem_Click);
             // 
+            // DiskSpaceLeftLabel
+            // 
+            this.DiskSpaceLeftLabel.AutoSize = true;
+            this.DiskSpaceLeftLabel.Location = new System.Drawing.Point(635, 540);
+            this.DiskSpaceLeftLabel.Name = "DiskSpaceLeftLabel";
+            this.DiskSpaceLeftLabel.Size = new System.Drawing.Size(35, 13);
+            this.DiskSpaceLeftLabel.TabIndex = 16;
+            this.DiskSpaceLeftLabel.Text = "label6";
+            // 
             // GameLoaderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(722, 582);
+            this.Controls.Add(this.DiskSpaceLeftLabel);
             this.Controls.Add(this.BrowseForGamePath);
             this.Controls.Add(this.BrowseForAutoDiscoveryFolderButton);
             this.Controls.Add(this.AddAutodiscoveryFolderButton);
@@ -401,6 +413,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem resetApplicationStateToolStripMenuItem;
+        private System.Windows.Forms.Label DiskSpaceLeftLabel;
     }
 }
 

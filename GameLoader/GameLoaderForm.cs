@@ -481,5 +481,21 @@ namespace GameLoader
                 LoadConfig();
             }
         }
+
+        private void fastFolderTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string text = fastFolderTextBox.Text;
+            var gameController = new GameController();
+            if (Path.IsPathRooted(text))
+            {
+                var totalFreeSpace = gameController.GetTotalFreeSpace(Path.GetPathRoot(text));
+                var bytes = Formatters.BytesToReadable(totalFreeSpace);
+                DiskSpaceLeftLabel.Text = bytes;
+            }
+            else
+            {
+                DiskSpaceLeftLabel.Text = "";
+            }
+        }
     }
 }
