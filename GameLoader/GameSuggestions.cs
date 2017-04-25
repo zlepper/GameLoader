@@ -107,7 +107,7 @@ namespace GameLoader
         private static bool CheckFolder(DirectoryInfo folder, List<string> libraryLocations)
         {
             // Check for steam libraries
-            if (folder.Name.Equals("SteamLibrary", StringComparison.OrdinalIgnoreCase))
+            if (folder.FullName.EndsWith("SteamLibrary\\steamapps\\common", StringComparison.OrdinalIgnoreCase))
             {
                 libraryLocations.Add(folder.FullName);
                 return true;

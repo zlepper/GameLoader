@@ -23,6 +23,8 @@ namespace GameLoader.IO
     public delegate void DoneMovingFilesEventHandler();
 
     public delegate void StartMovingFilesEventHandler();
+
+    public delegate void FileMoveProgressEventHandler(long progress, long total);
     /// <summary>
     /// Enables and disable games. 
     /// Also emits events when done
@@ -41,6 +43,8 @@ namespace GameLoader.IO
         public event DoneMovingFilesEventHandler DoneMovingFiles;
 
         public event StartMovingFilesEventHandler StartMovingFiles;
+
+        public event FileMoveProgressEventHandler FileMoveProgress;
 
         protected virtual void OnDoneEnablingGame(Game game)
         {
@@ -65,6 +69,11 @@ namespace GameLoader.IO
         protected virtual void OnStartMovingFiles()
         {
             StartMovingFiles?.Invoke();
+        }
+
+        protected virtual void OnFileMovingProgress(long progress, long total)
+        {
+            FileMoveProgress?.Invoke(progress, total);
         }
 
         public void EnableGame(Game game)
@@ -141,7 +150,11 @@ namespace GameLoader.IO
                 }
                 try
                 {
-                    file.CopyTo(outputfile, true);
+                    //file.CopyTo(outputfile, true);
+                    XCopy.Copy(file.FullName, outputfile, true, true, (o, pce) =>
+                    {
+                        OnFileMovingProgress(pce.Progress, pce.Total);
+                    });
                 }
                 catch (Exception)
                 {
@@ -257,7 +270,7 @@ namespace GameLoader.IO
             currentGame.Status = GameStatus.Unloading;
             LocalDataManager ldm = new LocalDataManager();
             Config cfg = ldm.LoadConfig();
-            
+
             DirectoryInfo gameDirectory = new DirectoryInfo(currentGame.Path + ".oldGameLoader");
             if (!gameDirectory.Exists)
             {

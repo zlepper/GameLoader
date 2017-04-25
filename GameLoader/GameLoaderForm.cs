@@ -89,7 +89,8 @@ namespace GameLoader
             if (result == DialogResult.Yes)
             {
                 string[] paths = GameSuggestions.GetGameFolders();
-                string question = "I found these paths: " + Environment.NewLine + string.Join(Environment.NewLine, paths) + Environment.NewLine + "Do you want to use them?" + Environment.NewLine + "You can add other folders to auto-discovery later if you want. ";
+                string question =
+                    $"I found these paths: {Environment.NewLine}{string.Join(Environment.NewLine, paths)}{Environment.NewLine}Do you want to use them?{Environment.NewLine}You can add other folders to auto-discovery later if you want. ";
                 result = MessageBox.Show(question, "Found paths", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
@@ -252,6 +253,7 @@ namespace GameLoader
                         gameController.DoneMovingFiles += GameControllerOnDoneMovingFiles;
                         gameController.GameMoveProgress += GameControllerOnGameMoveProgress;
                         gameController.DoneEnablingGame += GameControllerOnDoneEnablingGame;
+                        gameController.FileMoveProgress += GameControllerOnFileMoveProgress;
                         gameController.EnableGame(game);
                         break;
                     case GameStatus.Activated:
@@ -273,6 +275,11 @@ namespace GameLoader
                         break;
                 }
             }
+        }
+
+        private void GameControllerOnFileMoveProgress(long progress, long total)
+        {
+            FileProgressStatusStripLabel.Text = $"{progress} of {total} bytes copied";
         }
 
         private void GameControllerOnDoneDisablingGame(Game game)
@@ -315,6 +322,7 @@ namespace GameLoader
                 statusToolStripLabel.Text = "Ready!";
                 SaveData();
                 folderGridView_CurrentCellChanged(null, null);
+                FileProgressStatusStripLabel.Text = "";
             }
         }
 
@@ -329,10 +337,10 @@ namespace GameLoader
                 switch (workingProgress)
                 {
                     case WorkingProgress.Moving:
-                        statusToolStripLabel.Text = string.Format("Copying file {0} of {1}!", progress, count);
+                        statusToolStripLabel.Text = $"Copying file {progress} of {count}!";
                         break;
                     case WorkingProgress.Deleting:
-                        statusToolStripLabel.Text = string.Format("Deleting file {0} of {1}!", progress, count);
+                        statusToolStripLabel.Text = $"Deleting file {progress} of {count}!";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

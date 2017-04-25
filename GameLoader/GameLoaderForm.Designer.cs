@@ -44,6 +44,7 @@
             this.pathEditTextBox = new System.Windows.Forms.TextBox();
             this.nameEditTextBox = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStipProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.fastFolderTextBox = new System.Windows.Forms.TextBox();
             this.saveFastFolderButton = new System.Windows.Forms.Button();
@@ -51,7 +52,7 @@
             this.AddAutodiscoveryFolderButton = new System.Windows.Forms.Button();
             this.BrowseForAutoDiscoveryFolderButton = new System.Windows.Forms.Button();
             this.BrowseForGamePath = new System.Windows.Forms.Button();
-            this.statusStipProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.FileProgressStatusStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -223,12 +224,18 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStipProgressBar,
-            this.statusToolStripLabel});
+            this.statusToolStripLabel,
+            this.FileProgressStatusStripLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 560);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(722, 22);
             this.statusStrip1.TabIndex = 7;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusStipProgressBar
+            // 
+            this.statusStipProgressBar.Name = "statusStipProgressBar";
+            this.statusStipProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
             // statusToolStripLabel
             // 
@@ -298,10 +305,10 @@
             this.BrowseForGamePath.UseVisualStyleBackColor = true;
             this.BrowseForGamePath.Click += new System.EventHandler(this.BrowseForGamePathButton_Click);
             // 
-            // statusStipProgressBar
+            // FileProgressStatusStripLabel
             // 
-            this.statusStipProgressBar.Name = "statusStipProgressBar";
-            this.statusStipProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.FileProgressStatusStripLabel.Name = "FileProgressStatusStripLabel";
+            this.FileProgressStatusStripLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // GameLoaderForm
             // 
@@ -357,6 +364,7 @@
         private System.Windows.Forms.Button BrowseForAutoDiscoveryFolderButton;
         private System.Windows.Forms.Button BrowseForGamePath;
         private System.Windows.Forms.ToolStripProgressBar statusStipProgressBar;
+        private System.Windows.Forms.ToolStripStatusLabel FileProgressStatusStripLabel;
     }
 }
 
