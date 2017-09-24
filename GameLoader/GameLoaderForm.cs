@@ -58,6 +58,21 @@ namespace GameLoader
             Games = new BindingList<Game>(LoadData());
             BindingSource source = new BindingSource(Games, null);
             folderGridView.DataSource = source;
+            foreach (DataGridViewColumn column in folderGridView.Columns)
+            {
+                switch (column.HeaderText)
+                {
+                    case "Size":
+                        column.Visible = false;
+                        break;
+                    case "SizeForHumans":
+                        column.HeaderText = "Size";
+                        break;
+                    case "FileCount":
+                        column.HeaderText = "File Count";
+                        break;
+                }
+            }
         }
 
         private void LoadConfig()
