@@ -251,7 +251,8 @@
             // FileProgressStatusStripLabel
             // 
             this.FileProgressStatusStripLabel.Name = "FileProgressStatusStripLabel";
-            this.FileProgressStatusStripLabel.Size = new System.Drawing.Size(0, 17);
+            this.FileProgressStatusStripLabel.Size = new System.Drawing.Size(117, 17);
+            this.FileProgressStatusStripLabel.Text = "PLACEHOLDER TEXT";
             // 
             // fastFolderTextBox
             // 

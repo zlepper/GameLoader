@@ -125,6 +125,7 @@ namespace GameLoader.IO
 
         private void BackgroundWorkerLoadGame(object sender, DoWorkEventArgs doWorkEventArgs)
         {
+            DateTime before = DateTime.Now;
             currentGame.Status = GameStatus.Loading;
             LocalDataManager ldm = new LocalDataManager();
             Config cfg = ldm.LoadConfig();
@@ -138,61 +139,71 @@ namespace GameLoader.IO
             FileInfo[] files = di.GetFiles("*", SearchOption.AllDirectories);
             currentGame.FileCount = files.Length;
             currentGame.Size = files.Sum(t => t.Length);
-            for (int i = 0, len = files.Length; i < len; i++)
-            {
-                OnGameMoveProgress(i, len);
-                FileInfo file = files[i];
-                string outputfile = CalculateOutputFilePath(outputPath, file, di);
-                FileInfo f = new FileInfo(outputfile);
-                if (f.Directory != null && !f.Directory.Exists)
+            int count = 0;
+            bool hasCopyIssues = files.AsParallel()
+                .WithDegreeOfParallelism(Environment.ProcessorCount)
+                // If any of these are true, then we have a problem
+                .Any(info =>
                 {
-                    f.Directory.Create();
-                }
-                try
-                {
-                    //file.CopyTo(outputfile, true);
-                    XCopy.Copy(file.FullName, outputfile, true, true, (o, pce) =>
+                    OnGameMoveProgress(count++, files.Length);
+
+                    string outputfile = CalculateOutputFilePath(outputPath, info, di);
+                    FileInfo f = new FileInfo(outputfile);
+                    if (!f.Directory.Exists)
                     {
-                        OnFileMovingProgress(pce.Progress, pce.Total);
-                    });
-                }
-                catch (Exception)
-                {
-                    if (!CalculateMd5(file.FullName).Equals(CalculateMd5(outputfile)))
-                    {
-                        MessageBox.Show(
-                            $"Something went wrong when trying to move file \"{file.FullName}\" to \"{outputfile}\"");
-                        return;
+                        f.Directory.Create();
                     }
-                }
+                    return !CopyFile(info, outputfile);
+                });
+
+            if (hasCopyIssues)
+            {
+                return;
             }
+
+
             OnDoneMovingFiles();
+
             string newPath = di.FullName + ".oldGameLoader";
             di.MoveTo(newPath);
 
             CreateDirectoryJunction(outputPath, currentGame.Path);
             OnDoneEnablingGame(currentGame);
+
+            DateTime after = DateTime.Now;
+            
+            Console.WriteLine("Task took: " + (after - before).TotalSeconds);
+
         }
 
-        public static string CalculateMd5(string file)
+        /// <summary>
+        /// Copies the files. Does retry
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="outputfile"></param>
+        private bool CopyFile(FileInfo file, string outputfile, int count = 0)
         {
-            using (var md5 = MD5.Create())
+            try
             {
-                while (true)
-                {
-                    try
-                    {
-                        using (var stream = File.OpenRead(file))
-                        {
-                            return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty);
-                        }
-                    }
-                    catch
-                    {
-                        Thread.Sleep(100);
-                    }
-                }
+                //file.CopyTo(outputfile, true);
+                XCopy.Copy(file.FullName, outputfile, true, true,
+                    (o, pce) => { OnFileMovingProgress(pce.Progress, pce.Total); });
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                if (count > 3)
+                {
+                    MessageBox.Show(
+                        $"Something went horribly wrong when copying file '{file.FullName}' to '{outputfile}':\n{e.Message}\n{e.StackTrace}");
+                    return false;
+                }
+
+                // Sleep 100 ms and try again
+                Thread.Sleep(100);
+                return CopyFile(file, outputfile, count + 1);
+            }
+            return true;
         }
 
         private void CreateDirectoryJunction(string sourceDirectory, string destinationDirectory)
@@ -285,18 +296,22 @@ namespace GameLoader.IO
                 FileInfo[] files = gameLoaderDirectory.GetFiles("*", SearchOption.AllDirectories);
                 currentGame.FileCount = files.Length;
                 currentGame.Size = files.Sum(t => t.Length);
-                for (int i = 0, len = files.Length; i < len; i++)
-                {
-                    OnGameMoveProgress(i, len);
-                    FileInfo file = files[i];
-                    string outputfile = CalculateOutputFilePath(gameDirectory, file, gameLoaderDirectory);
-                    FileInfo f = new FileInfo(outputfile);
-                    if (f.Directory != null && !f.Directory.Exists)
+                int count = 0;
+                files.AsParallel()
+                    .WithDegreeOfParallelism(Environment.ProcessorCount)
+                    .ForAll(file =>
                     {
-                        f.Directory.Create();
-                    }
-                    file.CopyTo(outputfile, true);
-                }
+
+                        OnGameMoveProgress(count++, files.Length);
+                        string outputfile = CalculateOutputFilePath(gameDirectory, file, gameLoaderDirectory);
+                        FileInfo f = new FileInfo(outputfile);
+                        if (!f.Directory.Exists)
+                        {
+                            f.Directory.Create();
+                        }
+                        file.CopyTo(outputfile, true);
+                    });
+
                 OnDoneMovingFiles();
                 for (int i = 0, len = files.Length; i < len; i++)
                 {
@@ -319,11 +334,15 @@ namespace GameLoader.IO
 
                 DirectoryInfo gameLoaderDirectory = new DirectoryInfo(PathCombine(cfg.OutputPath, currentGame.Name));
                 FileInfo[] files = gameLoaderDirectory.GetFiles("*", SearchOption.AllDirectories);
-                for (int i = 0, len = files.Length; i < len; i++)
-                {
-                    OnGameMoveProgress(i, len);
-                    files[i].Delete();
-                }
+                int count = 0;
+                files.AsParallel()
+                    .WithDegreeOfParallelism(Environment.ProcessorCount)
+                    .ForAll(file =>
+                    {
+                        OnGameMoveProgress(count++, files.Length);
+                        file.Delete();
+                    });
+                
                 gameLoaderDirectory.Delete(true);
                 OnDoneDisablingGame(currentGame);
             }

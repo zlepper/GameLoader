@@ -51,6 +51,8 @@ namespace GameLoader
             };
             SetupGamesView();
             LoadConfig();
+
+            FileProgressStatusStripLabel.Text = "";
         }
 
         private void SetupGamesView()
@@ -299,7 +301,14 @@ namespace GameLoader
 
         private void GameControllerOnFileMoveProgress(long progress, long total)
         {
-            FileProgressStatusStripLabel.Text = $"{progress} of {total} bytes copied";
+            if (statusStrip1.InvokeRequired)
+            {
+                statusStrip1.Invoke(new Action(() => GameControllerOnFileMoveProgress(progress, total)));
+                return;
+            }
+            string progressText = progress.ToString().PadRight(total.ToString().Length);
+
+            FileProgressStatusStripLabel.Text = $"{progressText} of {total} bytes copied";
         }
 
         private void GameControllerOnDoneDisablingGame(Game game)
